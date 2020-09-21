@@ -25,6 +25,8 @@ func main() {
 	logAndExitOnErr(fmt.Sprintf("unable to create tmp dir at '%s'", tmpDir), err)
 	defer os.RemoveAll(tmpDir)
 
+	os.Mkdir("bin")
+
 	for _, depURL := range depURLs {
 		resp, err := http.Get(depURL)
 		logAndExitOnErr(fmt.Sprintf("unable to download file at '%s'", depURL), err)
@@ -37,9 +39,13 @@ func main() {
 		logAndExitOnErr(fmt.Sprintf("unable to copy to file at '%s'", tmpFile.Name()), err)
 
 		unarchiver := configureUnarchiver(depURL)
-		err = unarchiver.Unarchive(tmpFile.Name(), os.Getenv("HOME"))
+		err = unarchiver.Unarchive(tmpFile.Name(), "/github/home/bin")
 		logAndExitOnErr(fmt.Sprintf("unable to unarchive file at '%s'", tmpFile.Name()), err)
 	}
+
+	os.Remove("bin/ion-qt")
+	os.Remove("bin/ion-tx")
+	os.Remove("bin/test_ion")
 }
 
 func configureUnarchiver(depURL string) archiver.Unarchiver {
