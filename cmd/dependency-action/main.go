@@ -25,7 +25,7 @@ func main() {
 	logAndExitOnErr(fmt.Sprintf("unable to create tmp dir at '%s'", tmpDir), err)
 	defer os.RemoveAll(tmpDir)
 
-	os.Mkdir("bin")
+	os.Mkdir("bin", 0755)
 
 	for _, depURL := range depURLs {
 		resp, err := http.Get(depURL)
